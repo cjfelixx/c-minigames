@@ -39,3 +39,20 @@
 
 # debug information files
 *.dwo
+
+# VSCode
+**/.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# Exclude machine-specific settings
+.vscode/*.code-workspace
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
