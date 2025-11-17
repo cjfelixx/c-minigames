@@ -12,7 +12,7 @@ void move(Board& board, Player& player)
         auto coordinates = board.getCoordinates(position);
         if (!coordinates)
         {
-            cout<<"Invalid";
+            cout<<"Invalid"<<endl;
             continue;
         }
         auto [r, c] = *coordinates;

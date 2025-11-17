@@ -17,14 +17,27 @@ int main()
 
     Board board;
     
-    bool game = true;
-
-    while (game) 
+    while (true) 
     {            
         move(board, playerX);
         board.display();
+
+        if (board.checkWinner(playerX.getPiece()))
+        {
+            winner = playerX.getName();
+            break;
+        }
+
         move(board, playerO);
         board.display();
+        if (board.checkWinner(playerO.getPiece()))
+        {
+            winner = playerO.getName();
+            break;
+        }
     }
+
+    cout<<"Winner: "<<winner<<endl;
+    return 0;
 }
 

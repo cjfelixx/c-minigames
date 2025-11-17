@@ -15,7 +15,7 @@ class Board {
         void display();
         bool setPiece(int row, int col, char piece);
         optional<pair<int, int>> getCoordinates(string positionIn);
-        // optional<char> checkWinner(char piece);
+        bool checkWinner(char piece);
 };
 
 Board::Board()
@@ -80,27 +80,66 @@ optional<pair<int, int>> Board::getCoordinates(string positionIn)
     return pair{x, y};
 }
 
-// TODO: finish 
-// optional<char> Board::checkWinner(char piece)
-// {
-//     // Horizontal
-//     for (int r = 0; r < SIZE; r++)
-//     {
-//         int count = 0;
-//         for (int c = 0; c < SIZE; c++)
-//         {
-//             if (board[r][c] == piece)
-//             {
-//                 count++;
-//             }
-//         }
 
+bool Board::checkWinner(char piece)
+{
+    // Horizontal
+    for (int r = 0; r < SIZE; r++)
+    {
+        int count = 0;
+        for (int c = 0; c < SIZE; c++)
+        {
+            if (board[r][c] == piece)
+            {
+                count++;
+            }
+        }
+        if (count == SIZE)
+        {
+            return true;
+        }
+    }
+    // Vertical
 
-//     }
-//     // Vertical
+    for (int c = 0; c < SIZE; c++)
+    {
+        int count = 0;
+        for (int r = 0; r < SIZE; r++)
+        {
+            if (board[r][c] == piece)
+            {
+                count++;
+            }
 
-//     // Diagonal
-// }
+            if (count == SIZE)
+            {
+                return true;
+            }
+        }
+    }
+    // Diagonal
+    int forwardCount = 0;
+    int backwardsCount = 0;
+
+    for (int i =0; i < SIZE; i++)
+    {
+        if (board[i][i] == piece)
+        {
+            forwardCount++;
+        }
+        if (board[SIZE-i-1][SIZE-i-1] == piece)
+        {
+            backwardsCount++;
+        }
+    }
+
+    if (forwardCount == SIZE || backwardsCount == SIZE)
+    {
+        return true;
+    }
+
+    return false;
+}
 
 class Player {
     private:
