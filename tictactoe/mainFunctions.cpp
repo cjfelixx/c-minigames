@@ -7,7 +7,7 @@ void move(Board& board, Player& player)
     string position;
     while (true)
     {
-        cout<< player.getName() + ", choose a position: ";
+        cout<< player.name + ", choose a position: ";
         cin>>position;
         auto coordinates = board.getCoordinates(position);
         if (!coordinates)
@@ -16,7 +16,7 @@ void move(Board& board, Player& player)
             continue;
         }
         auto [r, c] = *coordinates;
-        if (!board.setPiece(r, c, player.getPiece()))
+        if (!board.setPiece(r, c, player.piece))
         {
             continue;
         }

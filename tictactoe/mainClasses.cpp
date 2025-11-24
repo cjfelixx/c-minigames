@@ -3,19 +3,46 @@
 
 using namespace std;
 
+enum class Status 
+{
+    Ongoing,
+    Draw,
+    Winner,
+};
+
+enum class Piece
+{
+    X,
+    O,
+    EMPTY
+};
+
+struct Player 
+{
+    string name;
+    Piece piece;
+};
+
+struct WinnerResult
+{
+    optional<Player> winner;
+    Status status;
+};
+
 class Board {
     private:
         static const int SIZE = 4;
-        char board[SIZE][SIZE];
+        Piece board[SIZE][SIZE];
         const string X_COORDINATE_VALUES = "ABCD";
-        static const char EMPTY_PIECE = '-';
+        static const Piece EMPTY_PIECE = Piece::EMPTY;
+        static string to_string(Piece p);
 
     public:
         Board();
         void display();
-        bool setPiece(int row, int col, char piece);
+        bool setPiece(int row, int col, Piece piece);
         optional<pair<int, int>> getCoordinates(string positionIn);
-        bool checkWinner(char piece);
+        WinnerResult checkWinner();
 };
 
 Board::Board()
@@ -35,16 +62,15 @@ void Board::display()
     {
         for (int c = 0; c < SIZE; c++)
         {
-            cout<<board[r][c];
+            cout<<to_string(board[r][c]);
         }
-        
         cout<<endl;
     }
 }
 
-bool Board::setPiece(int row, int col, char piece)
+bool Board::setPiece(int row, int col, Piece piece)
 {    
-    if (board[row][col] != EMPTY_PIECE)
+    if (board[row][col] != Piece::EMPTY)
     {
         cout<<"Position already placed."<<endl;
         return false;
@@ -80,86 +106,86 @@ optional<pair<int, int>> Board::getCoordinates(string positionIn)
     return pair{x, y};
 }
 
-
-bool Board::checkWinner(char piece)
+WinnerResult Board::checkWinner()
 {
-    // Horizontal
+    // Horizontal    
     for (int r = 0; r < SIZE; r++)
     {
+        Piece piece = board[r][0];
+        if (piece == Piece::EMPTY) continue;
         int count = 0;
         for (int c = 0; c < SIZE; c++)
         {
             if (board[r][c] == piece)
             {
                 count++;
+                continue;
             }
         }
         if (count == SIZE)
         {
-            return true;
+            return {nullopt, Status::Winner};
         }
     }
-    // Vertical
 
+    // Vertical
     for (int c = 0; c < SIZE; c++)
     {
+        Piece piece = board[0][c];
+        if (piece == Piece::EMPTY) continue;
         int count = 0;
         for (int r = 0; r < SIZE; r++)
         {
             if (board[r][c] == piece)
             {
                 count++;
+                continue;
             }
 
             if (count == SIZE)
             {
-                return true;
+                return {nullopt, Status::Winner};
             }
         }
     }
+
     // Diagonal
     int forwardCount = 0;
     int backwardsCount = 0;
-
+    Piece forwardPiece = board[0][0];
+    Piece backwardsPiece = board[0][SIZE-1];
     for (int i =0; i < SIZE; i++)
     {
-        if (board[i][i] == piece)
+        if (forwardPiece == Piece::EMPTY) continue;
+        if (backwardsPiece == Piece::EMPTY) continue;
+        
+        if (board[i][i] == forwardPiece)
         {
             forwardCount++;
+            continue;
         }
-        if (board[SIZE-i-1][SIZE-i-1] == piece)
+        if (board[SIZE-i-1][SIZE-i-1] == backwardsPiece)
         {
             backwardsCount++;
+            continue;
         }
     }
 
     if (forwardCount == SIZE || backwardsCount == SIZE)
     {
-        return true;
+            return {nullopt, Status::Winner};
     }
 
-    return false;
+    return {nullopt, Status::Ongoing};
 }
 
-class Player {
-    private:
-        string name;
-        char piece;
-
-    public:
-        Player(string nameIn, char pieceIn)
-        {
-            name = nameIn;
-            piece = pieceIn;
-        }
-
-        string getName()
-        {
-            return name;
-        }
-
-        char getPiece()
-        {
-            return piece;
-        }
+string Board::to_string(Piece p)
+{
+    switch (p)
+    {
+        case Piece::X:      return "X";
+        case Piece::O:      return "O";
+        case Piece::EMPTY:  return "-";
+    }
+    return "UNKNOWN";
 };

@@ -8,12 +8,12 @@ int main()
 
     cout<<"Player X, Enter your name: "<<endl;
     cin>>playerXName;
-    Player playerX = Player(playerXName, 'X');
+    Player playerX = Player{playerXName, Piece::X};
 
 
     cout<<"Player O, Enter your name: "<<endl;
     cin>>playerOName;
-    Player playerO = Player(playerOName, 'O');
+    Player playerO = Player{playerOName, Piece::O};
 
     Board board;
     
@@ -22,17 +22,17 @@ int main()
         move(board, playerX);
         board.display();
 
-        if (board.checkWinner(playerX.getPiece()))
+        if (WinnerResult result = board.checkWinner(); result.status == Status::Winner)
         {
-            winner = playerX.getName();
+            winner = playerX.name;
             break;
         }
 
         move(board, playerO);
         board.display();
-        if (board.checkWinner(playerO.getPiece()))
+        if (WinnerResult result = board.checkWinner(); result.status == Status::Winner)
         {
-            winner = playerO.getName();
+            winner = playerO.name;
             break;
         }
     }
